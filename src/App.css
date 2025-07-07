@@ -1,0 +1,91 @@
+.container {
+  display: grid;
+  grid-template-columns: 150px 1fr 250px;
+  grid-template-rows: 1fr 50px;
+  height: 100vh;
+  grid-template-areas:
+    "left center right"
+    "bottom bottom bottom";
+}
+
+.left {
+  grid-area: left;
+  background-color: #1e1e1e;
+  padding: 16px;
+  border-right: 1px solid #333;
+}
+
+.center {
+  grid-area: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative; /* ✅ 로고 위치 기준이 되도록 추가 */
+}
+
+.preview {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.right {
+  grid-area: right;
+  background-color: #1e1e1e;
+  padding: 16px;
+  border-left: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+
+.input {
+  padding: 8px;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+
+.item {
+  padding: 10px;
+  background: #2a2a2a;
+  border-radius: 4px;
+  min-height: 40px;
+}
+
+.scan-button {
+  padding: 10px;
+  background: #2196f3;
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1000px; /* ✅ 버튼을 아래로 밀되, 적당한 위치에 정렬 */
+}
+
+.bottom {
+  grid-area: bottom;
+  background-color: #000;
+  padding: 12px;
+  font-weight: bold;
+  color: yellow;
+  text-align: center;
+}
+
+.logo {
+  position: absolute; /* ✅ .center 내부 기준으로 정중앙 */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: fadeOut 1s ease-out 2s forwards;
+  width: 300px;
+  z-index: 10;
+}
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
