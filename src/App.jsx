@@ -9,7 +9,9 @@ const App = () => {
   const [itemName, setItemName] = useState('');
   const [warning, setWarning] = useState('');
   const [showLogo, setShowLogo] = useState(true);
-  const [showPreview, setShowPreview] = useState(true); // 중앙 이미지 미리보기 on/off
+  // 🔽 변경된 부분만 발췌
+  const [showPreview, setShowPreview] = useState(false); // 기본: 미리보기 꺼짐
+
 
   const fileInputRef = useRef();
 

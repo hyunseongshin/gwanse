@@ -60,9 +60,10 @@
   border-left: 1px solid #333;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Scan 버튼을 하단으로 */
+  gap: 16px; /* 요소 간 간격 확보 */
   height: 100%;
 }
+
 
 .input {
   padding: 8px;
@@ -84,6 +85,8 @@
   color: white;
   font-weight: bold;
   cursor: pointer;
+  margin-top: auto;         /* 가능한 아래로 내리되 */
+  margin-bottom: 20px;      /* Warning 메시지와 간격 확보 */
 }
 
 /* 하단: warning 메시지 */
