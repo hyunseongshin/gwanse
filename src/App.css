@@ -8,20 +8,42 @@
     "bottom bottom bottom";
 }
 
+/* 왼쪽: X-ray 이미지 리스트 */
 .left {
   grid-area: left;
   background-color: #1e1e1e;
   padding: 16px;
   border-right: 1px solid #333;
+  overflow-y: auto;
 }
 
+.xray-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.xray-thumb {
+  width: 100%;
+  max-height: 100px;
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid #444;
+  transition: border 0.2s;
+}
+
+.xray-thumb:hover {
+  border-color: #2196f3;
+}
+
+/* 중앙: 이미지 미리보기 영역 */
 .center {
   grid-area: center;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  position: relative; /* ✅ 로고 위치 기준이 되도록 추가 */
+  position: relative; /* 로고 기준 위치 */
 }
 
 .preview {
@@ -30,6 +52,7 @@
   object-fit: contain;
 }
 
+/* 오른쪽: HS Code 입력 및 Scan */
 .right {
   grid-area: right;
   background-color: #1e1e1e;
@@ -37,16 +60,15 @@
   border-left: 1px solid #333;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  justify-content: space-between; /* Scan 버튼을 하단으로 */
+  height: 100%;
 }
-
 
 .input {
   padding: 8px;
   font-size: 16px;
   margin-bottom: 12px;
 }
-
 
 .item {
   padding: 10px;
@@ -62,9 +84,9 @@
   color: white;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 1000px; /* ✅ 버튼을 아래로 밀되, 적당한 위치에 정렬 */
 }
 
+/* 하단: warning 메시지 */
 .bottom {
   grid-area: bottom;
   background-color: #000;
@@ -74,8 +96,9 @@
   text-align: center;
 }
 
+/* 중앙 로고 등장 후 사라지는 효과 */
 .logo {
-  position: absolute; /* ✅ .center 내부 기준으로 정중앙 */
+  position: absolute; /* .center 기준 중앙 */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -83,6 +106,7 @@
   width: 300px;
   z-index: 10;
 }
+
 @keyframes fadeOut {
   to {
     opacity: 0;
