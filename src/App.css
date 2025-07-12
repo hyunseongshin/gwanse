@@ -43,9 +43,25 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  position: relative; /* 로고 기준 위치 */
+  position: relative;
+  overflow: hidden;
 }
 
+/* Before/After 비교 컨테이너 */
+.comparison {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+.comparison img.preview {
+  max-width: 300px;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* 기본 이미지 미리보기 (단일일 때도 사용) */
 .preview {
   max-width: 100%;
   max-height: 100%;
@@ -60,10 +76,9 @@
   border-left: 1px solid #333;
   display: flex;
   flex-direction: column;
-  gap: 16px; /* 요소 간 간격 확보 */
+  gap: 16px;
   height: 100%;
 }
-
 
 .input {
   padding: 8px;
@@ -85,8 +100,8 @@
   color: white;
   font-weight: bold;
   cursor: pointer;
-  margin-top: auto;         /* 가능한 아래로 내리되 */
-  margin-bottom: 20px;      /* Warning 메시지와 간격 확보 */
+  margin-top: auto;
+  margin-bottom: 20px;
 }
 
 /* 하단: warning 메시지 */
@@ -101,7 +116,7 @@
 
 /* 중앙 로고 등장 후 사라지는 효과 */
 .logo {
-  position: absolute; /* .center 기준 중앙 */
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);

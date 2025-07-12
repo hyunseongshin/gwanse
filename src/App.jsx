@@ -10,6 +10,9 @@ const App = () => {
   const [warning, setWarning] = useState('');
   const [showLogo, setShowLogo] = useState(true);
   // 🔽 변경된 부분만 발췌
+  const [beforeImage, setBeforeImage] = useState(null);
+  const [afterImage, setAfterImage] = useState(null);
+
   const [showPreview, setShowPreview] = useState(false); // 기본: 미리보기 꺼짐
 
 
@@ -57,18 +60,44 @@ const App = () => {
     fileInputRef.current.click();
   };
 
-  const handleScan = () => {
+  const handleScan = async () => {
     const codeMap = {
       '1234': '전자제품',
       '5678': '의류',
       '9012': '액세서리',
     };
-
     setItemName(codeMap[hscode] || '알 수 없음');
 
-    const detected = selectedImage && Math.random() > 0.5;
-    setWarning(detected ? 'detect' : 'good');
+    if (!selectedImage) return;
+
+    try {
+      // scan 전 이미지 저장
+      setBeforeImage(selectedImage);
+
+      const blob = await fetch(selectedImage).then(res => res.blob());
+      const formData = new FormData();
+      formData.append('file', blob, 'scan.jpg');
+
+      const res = await fetch('http://localhost:5000/interface/drug', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error('분석 실패');
+
+      const resultBlob = await res.blob();
+      const resultUrl = URL.createObjectURL(resultBlob);
+
+      setAfterImage(resultUrl);
+      setShowPreview(true);  // 자동으로 미리보기 켬
+      setWarning('detect');
+    } catch (err) {
+      console.error('분석 실패:', err);
+      setWarning('error');
+    }
   };
+
+
 
   return (
     <div className="container">
@@ -92,29 +121,41 @@ const App = () => {
         </div>
       </div>
 
-      {/* 중앙: 이미지 미리보기 & 업로드 */}
-      <div className="center" onDoubleClick={handleDoubleClick}>
-        {showPreview ? (
-          selectedImage ? (
-            <img src={selectedImage} alt="selected" className="preview" />
-          ) : (
-            <p>더블 클릭하여 이미지 업로드</p>
-          )
+    <div className="center" onDoubleClick={handleDoubleClick}>
+      {showPreview ? (
+        beforeImage && afterImage ? (
+          <div className="comparison">
+            <div>
+              <p style={{ textAlign: 'center' }}>Before</p>
+              <img src={beforeImage} alt="before" className="preview" />
+            </div>
+            <div>
+              <p style={{ textAlign: 'center' }}>After</p>
+              <img src={afterImage} alt="after" className="preview" />
+            </div>
+          </div>
+        ) : selectedImage ? (
+          <img src={selectedImage} alt="selected" className="preview" />
         ) : (
-          <p style={{ opacity: 0.4 }}>더블 클릭하여 이미지 업로드</p>
-        )}
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          ref={fileInputRef}
-          style={{ display: 'none' }}
-          onChange={handleImageUpload}
-        />
-        <button onClick={() => setShowPreview(!showPreview)} style={{ position: 'absolute', bottom: 10, right: 10 }}>
-          {showPreview ? '미리보기 끄기' : '미리보기 켜기'}
-        </button>
-      </div>
+          <p>더블 클릭하여 이미지 업로드</p>
+        )
+      ) : (
+        <p style={{ opacity: 0.4 }}>더블 클릭하여 이미지 업로드</p>
+      )}
+
+      <input
+        type="file"
+        accept="image/*"
+        multiple
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        onChange={handleImageUpload}
+      />
+      <button onClick={() => setShowPreview(!showPreview)} style={{ position: 'absolute', bottom: 10, right: 10 }}>
+        {showPreview ? '미리보기 끄기' : '미리보기 켜기'}
+      </button>
+    </div>
+
 
       {/* 오른쪽: HS Code 입력 및 Scan */}
       <div className="right">
