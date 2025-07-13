@@ -25,23 +25,23 @@ app.post('/api/upload', upload.array('files'), (req, res) => {
   res.json({ success: true, files: req.files.map(f => f.filename) });
 });
 
-// drug 부분 요청 부분 api
 // 이미지 분석 요청 API
 app.post('/interface/drug', upload.single('file'), async (req, res) => {
   try {
     const filePath = req.file.path;
 
-    // FormData 구성
     const form = new FormData();
     form.append('file', fs.createReadStream(filePath));
 
-    // 분석 서버로 요청 전송
-    const response = await axios.post('http://192.168.0.20:8000/inference/drug', form, {
-      headers: form.getHeaders(),
-      responseType: 'arraybuffer' // 결과 이미지 받기 위해
-    });
+    const response = await axios.post(
+      'https://022d168353f8.ngrok-free.app/inference/drug',
+      form,
+      {
+        headers: form.getHeaders(),
+        responseType: 'arraybuffer'
+      }
+    );
 
-    // 결과 이미지 그대로 전달
     res.set('Content-Type', 'image/jpeg');
     res.send(response.data);
   } catch (error) {
@@ -50,6 +50,30 @@ app.post('/interface/drug', upload.single('file'), async (req, res) => {
   }
 });
 
+// 위험물 분석 추가 API
+app.post('/interface/dangerous', upload.single('file'), async (req, res) => {
+  try {
+    const filePath = req.file.path;
+
+    const form = new FormData();
+    form.append('file', fs.createReadStream(filePath));
+
+    const response = await axios.post(
+      'https://022d168353f8.ngrok-free.app/inference/dangerous',
+      form,
+      {
+        headers: form.getHeaders(),
+        responseType: 'arraybuffer'
+      }
+    );
+
+    res.set('Content-Type', 'image/jpeg');
+    res.send(response.data);
+  } catch (err) {
+    console.error('위험물 분석 실패:', err.message);
+    res.status(500).json({ error: 'Dangerous 분석 실패' });
+  }
+});
 // ✅ X-ray 목록 API
 app.get('/api/xrays', (req, res) => {
   const dir = path.join(__dirname, '../public/xrays');
@@ -64,7 +88,4 @@ app.listen(5000, () => {
   console.log('X-ray server running on http://localhost:5000');
 });
 
-// 이미지 전송해서 추론 값 뱉어내기
-// curl -X POST http://192.168.0.20:8000/inference/drug \
-//   -F "file=@./hs_1.png" \
-//   --output result.jpg
+
